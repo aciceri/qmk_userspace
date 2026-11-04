@@ -46,3 +46,6 @@ afterwards the right half in the bootloader when it says so.
 
 Open [vial.rocks](https://vial.rocks) or the Vial app. To unlock editing of
 security-sensitive features, hold Q + P when Vial asks.
+
+Tap-hold tuning (tapping term, permissive/chordal hold, flow tap) is set in
+`config.h`; Vial's QMK Settings tab is disabled so it can't override it.
