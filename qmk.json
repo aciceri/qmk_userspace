@@ -1,6 +1,7 @@
 {
     "userspace_version": "1.1",
     "build_targets": [
-        ["bluebell/swoop", "aciceri_miryoku"]
+        ["bluebell/swoop", "aciceri_miryoku", {"CONVERT_TO": "sparkfun_pm2040", "SPLIT_HAND": "left", "TARGET": "bluebell_swoop_aciceri_miryoku_left"}],
+        ["bluebell/swoop", "aciceri_miryoku", {"CONVERT_TO": "sparkfun_pm2040", "SPLIT_HAND": "right", "TARGET": "bluebell_swoop_aciceri_miryoku_right"}]
     ]
 }

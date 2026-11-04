@@ -14,8 +14,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define TAPPING_TERM 200
-
 #include QMK_KEYBOARD_H
 
 enum layers {
@@ -47,20 +45,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_MOUSE] = LAYOUT_split_3x5_3(
   XXXXXXX,           XXXXXXX,           XXXXXXX,           XXXXXXX,           XXXXXXX,           KC_AGAIN,          KC_PASTE,          KC_COPY,           KC_CUT,            KC_UNDO,
-  KC_LGUI,           KC_LALT,           KC_LCTL,           KC_LSFT,           XXXXXXX,           KC_MS_L,           KC_MS_D,           KC_MS_U,           KC_MS_R,           XXXXXXX,
-  XXXXXXX,           KC_ALGR,           XXXXXXX,           XXXXXXX,           XXXXXXX,           KC_WH_L,           KC_WH_D,           KC_WH_U,           KC_WH_R,           XXXXXXX,
-                                        XXXXXXX,           XXXXXXX,           XXXXXXX,           KC_BTN2,           KC_BTN1,           KC_BTN3
+  KC_LGUI,           KC_LALT,           KC_LCTL,           KC_LSFT,           XXXXXXX,           MS_LEFT,           MS_DOWN,           MS_UP,             MS_RGHT,           XXXXXXX,
+  XXXXXXX,           KC_ALGR,           XXXXXXX,           XXXXXXX,           XXXXXXX,           MS_WHLL,           MS_WHLD,           MS_WHLU,           MS_WHLR,           XXXXXXX,
+                                        XXXXXXX,           XXXXXXX,           XXXXXXX,           MS_BTN2,           MS_BTN1,           MS_BTN3
 ),
 
 [_BUTTON] = LAYOUT_split_3x5_3(
   KC_UNDO,           KC_CUT,            KC_COPY,           KC_PASTE,          KC_AGAIN,          KC_AGAIN,          KC_PASTE,          KC_COPY,           KC_CUT,            KC_UNDO,
   KC_LGUI,           KC_LALT,           KC_LCTL,           KC_LSFT,           XXXXXXX,           XXXXXXX,           KC_RSFT,           KC_RCTL,           KC_RALT,           KC_RGUI,
   KC_UNDO,           KC_CUT,            KC_COPY,           KC_PASTE,          KC_AGAIN,          KC_AGAIN,          KC_PASTE,          KC_COPY,           KC_CUT,            KC_UNDO,
-					KC_BTN3,           KC_BTN1,           KC_BTN2,           KC_BTN2,           KC_BTN1,           KC_BTN3
+					MS_BTN3,           MS_BTN1,           MS_BTN2,           MS_BTN2,           MS_BTN1,           MS_BTN3
 ),
 
 [_MEDIA] = LAYOUT_split_3x5_3(
-  XXXXXXX,           XXXXXXX,           XXXXXXX,           XXXXXXX,           XXXXXXX,           RGB_MOD,           RGB_HUI,           RGB_SAI,           RGB_VAI,           RGB_TOG,
+  XXXXXXX,           XXXXXXX,           XXXXXXX,           XXXXXXX,           XXXXXXX,           UG_NEXT,           UG_HUEU,           UG_SATU,           UG_VALU,           UG_TOGG,
   KC_LGUI,           KC_LALT,           KC_LCTL,           KC_LSFT,           XXXXXXX,           KC_MPRV,           KC_VOLD,           KC_VOLU,           KC_MNXT,           XXXXXXX,
   XXXXXXX,           XXXXXXX,           XXXXXXX,           XXXXXXX,           XXXXXXX,           XXXXXXX,           XXXXXXX,           XXXXXXX,           XXXXXXX,           XXXXXXX,             
 		                        XXXXXXX,           XXXXXXX,           XXXXXXX,           KC_MSTP,           KC_MPLY,           KC_MUTE
