@@ -86,6 +86,37 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 )
 };
 
+// LED layer indicator: the whole board turns one colour while a layer is
+// active. Indices match the layer enum; _BASE's slot is used for Caps Word.
+#define WHOLE_BOARD(hsv) RGBLIGHT_LAYER_SEGMENTS({0, RGBLIGHT_LED_COUNT, hsv})
+static const rgblight_segment_t PROGMEM caps_word_leds[] = WHOLE_BOARD(HSV_WHITE);
+static const rgblight_segment_t PROGMEM nav_leds[]       = WHOLE_BOARD(HSV_CYAN);
+static const rgblight_segment_t PROGMEM mouse_leds[]     = WHOLE_BOARD(HSV_YELLOW);
+static const rgblight_segment_t PROGMEM button_leds[]    = WHOLE_BOARD(HSV_MAGENTA);
+static const rgblight_segment_t PROGMEM media_leds[]     = WHOLE_BOARD(HSV_PURPLE);
+static const rgblight_segment_t PROGMEM num_leds[]       = WHOLE_BOARD(HSV_BLUE);
+static const rgblight_segment_t PROGMEM sym_leds[]       = WHOLE_BOARD(HSV_GREEN);
+static const rgblight_segment_t PROGMEM fun_leds[]       = WHOLE_BOARD(HSV_RED);
+
+static const rgblight_segment_t *const PROGMEM led_layers[] = RGBLIGHT_LAYERS_LIST(
+  caps_word_leds, nav_leds, mouse_leds, button_leds, media_leds, num_leds, sym_leds, fun_leds
+);
+
+void keyboard_post_init_user(void) {
+  rgblight_layers = led_layers;
+}
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+  for (uint8_t layer = _NAV; layer <= _FUN; layer++) {
+    rgblight_set_layer_state(layer, layer_state_cmp(state, layer));
+  }
+  return state;
+}
+
+void caps_word_set_user(bool active) {
+  rgblight_set_layer_state(_BASE, active);
+}
+
 // Chordal Hold handedness: thumbs ('*') can be held with keys of either hand,
 // so thumb layers keep working with same-hand modifiers.
 const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM = LAYOUT_split_3x5_3(

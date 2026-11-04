@@ -12,6 +12,22 @@
 // Tap-hold keys pressed within 100 ms of the previous letter are always taps
 #define FLOW_TAP_TERM 100
 
+// LED layer indicator (keymap.c): shown even with the LEDs toggled off, at
+// the current brightness
+#define RGBLIGHT_LAYERS
+#define RGBLIGHT_LAYERS_OVERRIDE_RGB_OFF
+#define RGBLIGHT_LAYERS_RETAIN_VAL
+
+// Mouse keys in inertia mode: a tap moves 1 px, holding accelerates
+// quadratically up to MAX_SPEED px per 16 ms frame (~2500 px/s, a 1440p
+// screen width in about a second), releasing glides to a stop.
+#define MOUSEKEY_INERTIA
+#define MOUSEKEY_MAX_SPEED 40
+// Wheel: start sooner and ramp faster than the defaults (80 ms, 8, 40)
+#define MOUSEKEY_WHEEL_INTERVAL 50
+#define MOUSEKEY_WHEEL_MAX_SPEED 6
+#define MOUSEKEY_WHEEL_TIME_TO_MAX 30
+
 // Vial
 #define VIAL_KEYBOARD_UID {0xB5, 0x72, 0x76, 0x84, 0x84, 0xAA, 0x1E, 0xF7}
 // Hold Q + P while plugging/unlocking in Vial
