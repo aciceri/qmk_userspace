@@ -11,8 +11,8 @@ controllers, built with [Vial](https://get.vial.today).
 - `qmk.json`: two build targets, one image per half.
 
 The keymap in `keymap.c` is the default; changes made in Vial live in the
-keyboard's EEPROM until Vial's "Reset to defaults" (or a flash that resets
-EEPROM) restores it.
+keyboard's EEPROM. Every newly built firmware resets them to `keymap.c` on
+first boot, so save a `.vil` from Vial before flashing and load it back after.
 
 ## Build
 
@@ -32,9 +32,11 @@ as above) and commit the new submodule pointer.
 The Swoop uses `EE_HANDS`: each image writes its handedness at boot, so the
 left image goes on the left half and the right image on the right one.
 
-For each half: unplug the TRRS cable, plug USB, double-tap reset (or hold
-BOOT while plugging) so it mounts as `RPI-RP2`, then copy the matching
-`.uf2` onto it.
+For each half: unplug the TRRS cable, plug USB, double-press the reset
+button on the inner side of the PCB (or hold BOOT on the controller while
+tapping RESET) so it mounts as `RPI-RP2`, then copy the matching `.uf2`
+onto it. Bootmagic (hold Q while plugging) is disabled because it wipes the
+EEPROM.
 
 ## Vial
 

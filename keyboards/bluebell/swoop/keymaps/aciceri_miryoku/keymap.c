@@ -85,3 +85,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                         KC_APP,            KC_SPC,            KC_TAB,            XXXXXXX,           XXXXXXX,           XXXXXXX	    
 )
 };
+
+// VIA forces BOOTMAGIC_ENABLE. Booting with Q held would wipe the EEPROM
+// (handedness and Vial changes) and jump to the bootloader: never do that.
+void bootmagic_scan(void) {}
