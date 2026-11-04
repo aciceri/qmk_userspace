@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Flash both Swoop halves hands-free: left first, then right.
+# Flash both Swoop halves hands-free: left first, then right
+# (or only the given ones: ./flash.sh right).
 # Start it while the keyboard still works (it asks for the sudo password),
 # then put each half in the bootloader when prompted.
 set -euo pipefail
@@ -31,6 +32,10 @@ flash() {
     echo ">>> ${side^^}: done"
 }
 
-flash left
-flash right
-echo ">>> Both halves flashed. Unplug USB, reconnect the TRRS cable, plug USB back in."
+sides=("$@")
+[[ ${#sides[@]} -gt 0 ]] || sides=(left right)
+for side in "${sides[@]}"; do
+    [[ $side == left || $side == right ]] || { echo "unknown side: $side" >&2; exit 1; }
+    flash "$side"
+done
+echo ">>> Flashed: ${sides[*]}. Unplug USB, reconnect the TRRS cable, plug USB back in."
