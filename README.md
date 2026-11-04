@@ -38,6 +38,10 @@ tapping RESET) so it mounts as `RPI-RP2`, then copy the matching `.uf2`
 onto it. Bootmagic (hold Q while plugging) is disabled because it wipes the
 EEPROM.
 
+`./flash.sh` does the copying hands-free (useful when the Swoop is the only
+keyboard): start it, type the sudo password, then put the left half and
+afterwards the right half in the bootloader when it says so.
+
 ## Vial
 
 Open [vial.rocks](https://vial.rocks) or the Vial app. To unlock editing of
