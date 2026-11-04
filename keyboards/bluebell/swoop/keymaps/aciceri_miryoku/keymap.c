@@ -86,6 +86,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 )
 };
 
+// Chordal Hold handedness: thumbs ('*') can be held with keys of either hand,
+// so thumb layers keep working with same-hand modifiers.
+const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM = LAYOUT_split_3x5_3(
+  'L', 'L', 'L', 'L', 'L',  'R', 'R', 'R', 'R', 'R',
+  'L', 'L', 'L', 'L', 'L',  'R', 'R', 'R', 'R', 'R',
+  'L', 'L', 'L', 'L', 'L',  'R', 'R', 'R', 'R', 'R',
+                 '*', '*', '*',  '*', '*', '*'
+);
+
 // VIA forces BOOTMAGIC_ENABLE. Booting with Q held would wipe the EEPROM
 // (handedness and Vial changes) and jump to the bootloader: never do that.
 void bootmagic_scan(void) {}
