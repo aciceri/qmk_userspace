@@ -18,6 +18,19 @@
 #define RGBLIGHT_LAYERS_OVERRIDE_RGB_OFF
 #define RGBLIGHT_LAYERS_RETAIN_VAL
 
+// All underglow effects (the Swoop definition only enables breathing,
+// rainbow mood/swirl and static gradient)
+#define RGBLIGHT_EFFECT_ALTERNATING
+#define RGBLIGHT_EFFECT_BREATHING
+#define RGBLIGHT_EFFECT_CHRISTMAS
+#define RGBLIGHT_EFFECT_KNIGHT
+#define RGBLIGHT_EFFECT_RAINBOW_MOOD
+#define RGBLIGHT_EFFECT_RAINBOW_SWIRL
+#define RGBLIGHT_EFFECT_RGB_TEST
+#define RGBLIGHT_EFFECT_SNAKE
+#define RGBLIGHT_EFFECT_STATIC_GRADIENT
+#define RGBLIGHT_EFFECT_TWINKLE
+
 // Mouse keys in inertia mode: a tap moves 1 px, holding accelerates
 // quadratically up to MAX_SPEED px per 16 ms frame (~2500 px/s, a 1440p
 // screen width in about a second), releasing glides to a stop.
