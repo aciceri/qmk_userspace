@@ -15,6 +15,7 @@
  */
 
 #include QMK_KEYBOARD_H
+#include "transactions.h"
 
 enum layers {
   _BASE,
@@ -58,7 +59,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 
 [_MEDIA] = LAYOUT_split_3x5_3(
-  XXXXXXX,           XXXXXXX,           XXXXXXX,           XXXXXXX,           XXXXXXX,           UG_NEXT,           UG_HUEU,           UG_SATU,           UG_VALU,           UG_TOGG,
+  XXXXXXX,           XXXXXXX,           XXXXXXX,           XXXXXXX,           XXXXXXX,           RM_NEXT,           RM_HUEU,           RM_SATU,           RM_VALU,           RM_TOGG,
   KC_LGUI,           KC_LALT,           KC_LCTL,           KC_LSFT,           XXXXXXX,           KC_MPRV,           KC_VOLD,           KC_VOLU,           KC_MNXT,           XXXXXXX,
   XXXXXXX,           XXXXXXX,           XXXXXXX,           XXXXXXX,           XXXXXXX,           XXXXXXX,           XXXXXXX,           XXXXXXX,           XXXXXXX,           XXXXXXX,             
 		                        XXXXXXX,           XXXXXXX,           XXXXXXX,           KC_MSTP,           KC_MPLY,           KC_MUTE
@@ -86,35 +87,75 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 )
 };
 
-// LED layer indicator: the whole board turns one colour while a layer is
-// active. Indices match the layer enum; _BASE's slot is used for Caps Word.
-#define WHOLE_BOARD(hsv) RGBLIGHT_LAYER_SEGMENTS({0, RGBLIGHT_LED_COUNT, hsv})
-static const rgblight_segment_t PROGMEM caps_word_leds[] = WHOLE_BOARD(HSV_WHITE);
-static const rgblight_segment_t PROGMEM nav_leds[]       = WHOLE_BOARD(HSV_CYAN);
-static const rgblight_segment_t PROGMEM mouse_leds[]     = WHOLE_BOARD(HSV_YELLOW);
-static const rgblight_segment_t PROGMEM button_leds[]    = WHOLE_BOARD(HSV_MAGENTA);
-static const rgblight_segment_t PROGMEM media_leds[]     = WHOLE_BOARD(HSV_PURPLE);
-static const rgblight_segment_t PROGMEM num_leds[]       = WHOLE_BOARD(HSV_BLUE);
-static const rgblight_segment_t PROGMEM sym_leds[]       = WHOLE_BOARD(HSV_GREEN);
-static const rgblight_segment_t PROGMEM fun_leds[]       = WHOLE_BOARD(HSV_RED);
+led_config_t g_led_config = { {
+    // Matrix position -> LED index (chain order, from the swoop-mx PCB)
+    {     16,     11,     10,      4,      3 },
+    {     15,     12,      9,      5,      2 },
+    {     14,     13,      8,      6,      1 },
+    { NO_LED, NO_LED,     17,      7,      0 },
+    {     34,     29,     28,     22,     21 },
+    {     33,     30,     27,     23,     20 },
+    {     32,     31,     26,     24,     19 },
+    { NO_LED, NO_LED,     35,     25,     18 }
+}, {
+    // LED index -> physical position (0..224 x 0..64)
+    { 96, 64}, { 75, 40}, { 75, 22}, { 75,  4}, { 56,  2}, { 56, 20},
+    { 56, 38}, { 75, 60}, { 37, 35}, { 37, 18}, { 37,  0}, { 19,  2},
+    { 19, 20}, { 19, 38}, {  0, 42}, {  0, 24}, {  0,  7}, { 54, 57},
+    {128, 64}, {149, 40}, {149, 22}, {149,  4}, {168,  2}, {168, 20},
+    {168, 38}, {149, 60}, {187, 35}, {187, 18}, {187,  0}, {205,  2},
+    {205, 20}, {205, 38}, {224, 42}, {224, 24}, {224,  7}, {170, 57}
+}, {
+    // Thumbs are LED_FLAG_MODIFIER (1), the rest LED_FLAG_KEYLIGHT (4)
+    1, 4, 4, 4, 4, 4, 4, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1,
+    1, 4, 4, 4, 4, 4, 4, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1
+} };
 
-static const rgblight_segment_t *const PROGMEM led_layers[] = RGBLIGHT_LAYERS_LIST(
-  caps_word_leds, nav_leds, mouse_leds, button_leds, media_leds, num_leds, sym_leds, fun_leds
-);
+// Caps Word only runs on the master: mirror it to the slave so both halves
+// show the indicator. Resent periodically in case the slave rebooted.
+static bool slave_caps_word;
+
+static void caps_word_sync(uint8_t in_len, const void *in_data, uint8_t out_len, void *out_data) {
+  slave_caps_word = *(const bool *)in_data;
+}
 
 void keyboard_post_init_user(void) {
-  rgblight_layers = led_layers;
+  transaction_register_rpc(CAPS_WORD_SYNC, caps_word_sync);
 }
 
-layer_state_t layer_state_set_user(layer_state_t state) {
-  for (uint8_t layer = _NAV; layer <= _FUN; layer++) {
-    rgblight_set_layer_state(layer, layer_state_cmp(state, layer));
+void housekeeping_task_user(void) {
+  if (!is_keyboard_master()) return;
+  static bool     synced;
+  static uint32_t last_sync;
+  bool            active = is_caps_word_on();
+  if (active != synced || timer_elapsed32(last_sync) > 500) {
+    if (transaction_rpc_send(CAPS_WORD_SYNC, sizeof(active), &active)) {
+      synced    = active;
+      last_sync = timer_read32();
+    }
   }
-  return state;
 }
 
-void caps_word_set_user(bool active) {
-  rgblight_set_layer_state(_BASE, active);
+static bool caps_word_active(void) {
+  return is_keyboard_master() ? is_caps_word_on() : slave_caps_word;
+}
+
+// LED layer indicator: the whole board turns one colour, at the current
+// brightness, while a layer is active. _BASE's colour is used for Caps Word.
+static const hsv_t layer_colors[] = {
+  [_BASE] = {HSV_WHITE},  [_NAV] = {HSV_CYAN}, [_MOUSE] = {HSV_YELLOW},
+  [_BUTTON] = {HSV_MAGENTA}, [_MEDIA] = {HSV_PURPLE}, [_NUM] = {HSV_BLUE},
+  [_SYM] = {HSV_GREEN},   [_FUN] = {HSV_RED},
+};
+
+bool rgb_matrix_indicators_user(void) {
+  uint8_t layer = get_highest_layer(layer_state);
+  if (layer == _BASE && !caps_word_active()) return false;
+  hsv_t hsv = layer_colors[layer];
+  hsv.v     = rgb_matrix_get_val();
+  rgb_t rgb = hsv_to_rgb(hsv);
+  rgb_matrix_set_color_all(rgb.r, rgb.g, rgb.b);
+  return false;
 }
 
 // Chordal Hold handedness: thumbs ('*') can be held with keys of either hand,

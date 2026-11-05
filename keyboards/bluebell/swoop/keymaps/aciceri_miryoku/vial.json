@@ -2,7 +2,7 @@
   "name": "Swoop",
   "vendorId": "0x1804",
   "productId": "0x3046",
-  "lighting": "qmk_rgblight",
+  "lighting": "vialrgb",
   "matrix": {
     "rows": 8,
     "cols": 5
