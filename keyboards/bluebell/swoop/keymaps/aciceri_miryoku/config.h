@@ -10,6 +10,7 @@
 // ...but only with the opposite hand (see chordal_hold_layout in keymap.c)
 #define CHORDAL_HOLD
 // Tap-hold keys pressed within 100 ms of the previous letter are always taps
+// (except the Shift home row mods, see get_flow_tap_term in keymap.c)
 #define FLOW_TAP_TERM 100
 
 // Per-key LEDs via RGB Matrix (LED map in keymap.c): 18 SK6812 Mini-E per half

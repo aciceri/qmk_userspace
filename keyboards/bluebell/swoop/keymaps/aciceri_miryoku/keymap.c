@@ -167,6 +167,18 @@ const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM = LAYOUT_split_
                  '*', '*', '*',  '*', '*', '*'
 );
 
+// Flow Tap, except for the Shift home row mods: Shift is usually pressed right
+// after a letter ("word?" is ...d, F held, /), so it must be able to hold
+// immediately. Chordal and permissive hold still guard it against rolls.
+uint16_t get_flow_tap_term(uint16_t keycode, keyrecord_t *record, uint16_t prev_keycode) {
+  switch (keycode) {
+    case LSFT_T(KC_F):
+    case RSFT_T(KC_J):
+      return 0;
+  }
+  return is_flow_tap_key(keycode) && is_flow_tap_key(prev_keycode) ? FLOW_TAP_TERM : 0;
+}
+
 // VIA forces BOOTMAGIC_ENABLE. Booting with Q held would wipe the EEPROM
 // (handedness and Vial changes) and jump to the bootloader: never do that.
 void bootmagic_scan(void) {}
