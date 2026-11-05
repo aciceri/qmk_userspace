@@ -1,8 +1,8 @@
 # QMK/Vial userspace for the Bluebell Swoop
 
-Miryoku-style keymap (home row mods, 8 layers, RGB underglow) for a
-[Swoop](https://github.com/jimmerricks/swoop) with SparkFun Pro Micro RP2040
-controllers, built with [Vial](https://get.vial.today).
+Miryoku-style keymap (home row mods, 8 layers, per-key RGB Matrix with a
+layer indicator) for a [Swoop](https://github.com/jimmerricks/swoop) with
+SparkFun Pro Micro RP2040 controllers, built with [Vial](https://get.vial.today).
 
 - `keyboards/bluebell/swoop/keymaps/aciceri_miryoku/`: keymap (`keymap.c`),
   Vial definition (`vial.json`), settings (`config.h`, `rules.mk`).
